@@ -10,6 +10,8 @@ def main():
 	pca_preparo.alongamento()
 	pca_preparo.rotacao()
 	pca_preparo.plot()
+	#pca_preparo.subplot()
+
 
 class PCA:
 	def __init__(self):
@@ -17,6 +19,8 @@ class PCA:
 		self.aleatorios_y = []
 		self.circulo_x = []
 		self.circulo_y = []
+		self.circulo_y_alongado = []
+		self.rotacao_ = []
 	def aleatorios(self,interacoes):
 		for i in range(interacoes):
 			k = random.uniform(-1,1)
@@ -33,21 +37,32 @@ class PCA:
 				continue
 	def alongamento(self):
 		for i in range(len(self.circulo_y)):
-			self.circulo_y[i] = 0.2*self.circulo_y[i]
+			self.circulo_y_alongado.append(0)
+		for i in range(len(self.circulo_y)):
+			self.circulo_y_alongado[i] = 0.2*self.circulo_y[i]
 	def rotacao(self):
-		for i in range(len(self.circulo_x)):
-			k = math.radians(30)
-			self.circulo_x[i] = math.cos(k)*math.sin(k)*self.circulo_x[i]
-			self.circulo_y[i] = math.sin(k)*math.cos(k)*self.circulo_y[i]
+		k = np.radians(30)
+		rot = [[np.cos(k),np.sin(k)],[np.sin(k),np.cos(k)]]
+		self.rotacao_ = np.dot(rot,[self.circulo_x,self.circulo_y_alongado])
 	def plot(self):
 		plt.title("PCA")
 		plt.xlabel("x")
 		plt.ylabel("y")
 		plt.xlim(-1,1)
 		plt.ylim(-1,1)
-		plt.scatter(self.circulo_x,self.circulo_y, s = 2)
+		#plt.scatter(self.circulo_x,self.circulo_y, s = 2)
+		#plt.scatter(self.circulo_x,self.circulo_y_alongado, s = 2)
+		plt.scatter(self.rotacao_[0],self.rotacao_[1], s = 2)
 		plt.show()
-
+	def subplot(self):
+		fig, ax = plt.subplots(1,3)
+		plt.xlim(-1,1)
+		plt.ylim(-1,1)
+		fig.suptitle("PCA")
+		ax[0].scatter(self.circulo_x,self.circulo_y, s = 2)
+		ax[1].scatter(self.circulo_x,self.circulo_y_alongado, s = 2)
+		ax[2].scatter(self.rotacao_[0],self.rotacao_[1], s = 2)
+		plt.show()
 
 if __name__ == '__main__':
 	main()
