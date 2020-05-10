@@ -67,16 +67,14 @@ class PCA:
 		self.eigenvalue = self.eigenvalue[::-1]
 		self.eigenvector.sort()
 		self.eigenvector = self.eigenvector[::-1]
+		eta = self.eigenvalue[0]/(sum(self.eigenvalue))
+		print(eta)
 
 	def new_features(self): 
 		Q = []
 		for i in range(len(self.eigenvector)):
 			Q.append(self.eigenvector[i])
-		for i in range(len(self.circulo_x)):
-			k = Q[0]*self.circulo_x[i]
-			self.new_circulo_x.append(k)
-			h = Q[1]*self.circulo_y_alongado[i]
-			self.new_circulo_y.append(h)
+		#####PRECISA ACABAR
 
 	def plot(self):
 		plt.title("PCA")
@@ -87,7 +85,6 @@ class PCA:
 		#plt.scatter(self.circulo_x,self.circulo_y, s = 2)
 		#plt.scatter(self.circulo_x,self.circulo_y_alongado, s = 2)
 		#plt.scatter(self.rotacao_[0],self.rotacao_[1], s = 2)
-		plt.scatter(self.new_circulo_x,self.new_circulo_y,s = 2)
 		plt.show()
 
 	def subplot(self):
