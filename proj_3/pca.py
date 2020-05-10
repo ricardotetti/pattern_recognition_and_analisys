@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt 
 import numpy as np 
+from numpy import linalg as LA
 import random
 import math
 
@@ -9,6 +10,9 @@ def main():
 	pca_preparo.circulo()
 	pca_preparo.alongamento()
 	pca_preparo.rotacao()
+	pca_preparo.covariancia()
+	pca_preparo.eigen()
+	pca_preparo.new_features()
 	pca_preparo.plot()
 	#pca_preparo.subplot()
 
@@ -21,12 +25,19 @@ class PCA:
 		self.circulo_y = []
 		self.circulo_y_alongado = []
 		self.rotacao_ = []
+		self.cov_matrix = []
+		self.eigenvalue = []
+		self.eigenvector = []
+		self.new_circulo_x = []
+		self.new_circulo_y = []
+
 	def aleatorios(self,interacoes):
 		for i in range(interacoes):
 			k = random.uniform(-1,1)
 			h = random.uniform(-1,1)
 			self.aleatorios_x.append(k)
 			self.aleatorios_y.append(h)
+
 	def circulo(self):
 		for i in range(len(self.aleatorios_x)):
 			k = math.sqrt((self.aleatorios_y[i])**2 + (self.aleatorios_x[i])**2)
@@ -35,15 +46,38 @@ class PCA:
 				self.circulo_y.append(self.aleatorios_y[i])
 			else:
 				continue
+
 	def alongamento(self):
 		for i in range(len(self.circulo_y)):
 			self.circulo_y_alongado.append(0)
 		for i in range(len(self.circulo_y)):
 			self.circulo_y_alongado[i] = 0.2*self.circulo_y[i]
+
 	def rotacao(self):
 		k = np.radians(30)
 		rot = [[np.cos(k),np.sin(k)],[np.sin(k),np.cos(k)]]
 		self.rotacao_ = np.dot(rot,[self.circulo_x,self.circulo_y_alongado])
+
+	def covariancia(self):
+		self.cov_matrix = np.cov(self.rotacao_)
+	
+	def eigen(self):
+		self.eigenvalue,self.eigenvector = LA.eig(self.cov_matrix)
+		self.eigenvalue.sort()
+		self.eigenvalue = self.eigenvalue[::-1]
+		self.eigenvector.sort()
+		self.eigenvector = self.eigenvector[::-1]
+
+	def new_features(self): 
+		Q = []
+		for i in range(len(self.eigenvector)):
+			Q.append(self.eigenvector[i])
+		for i in range(len(self.circulo_x)):
+			k = Q[0]*self.circulo_x[i]
+			self.new_circulo_x.append(k)
+			h = Q[1]*self.circulo_y_alongado[i]
+			self.new_circulo_y.append(h)
+
 	def plot(self):
 		plt.title("PCA")
 		plt.xlabel("x")
@@ -52,8 +86,10 @@ class PCA:
 		plt.ylim(-1,1)
 		#plt.scatter(self.circulo_x,self.circulo_y, s = 2)
 		#plt.scatter(self.circulo_x,self.circulo_y_alongado, s = 2)
-		plt.scatter(self.rotacao_[0],self.rotacao_[1], s = 2)
+		#plt.scatter(self.rotacao_[0],self.rotacao_[1], s = 2)
+		plt.scatter(self.new_circulo_x,self.new_circulo_y,s = 2)
 		plt.show()
+
 	def subplot(self):
 		fig, ax = plt.subplots(1,3)
 		plt.xlim(-1,1)
