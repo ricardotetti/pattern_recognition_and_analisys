@@ -12,7 +12,6 @@ def main():
 	pca_preparo.rotacao()
 	pca_preparo.covariancia()
 	pca_preparo.eigen()
-	pca_preparo.new_features()
 	pca_preparo.plot()
 	#pca_preparo.subplot()
 
@@ -65,26 +64,24 @@ class PCA:
 		self.eigenvalue,self.eigenvector = LA.eig(self.cov_matrix)
 		self.eigenvalue.sort()
 		self.eigenvalue = self.eigenvalue[::-1]
-		self.eigenvector.sort()
-		self.eigenvector = self.eigenvector[::-1]
-		eta = self.eigenvalue[0]/(sum(self.eigenvalue))
-		print(eta)
-
-	def new_features(self): 
-		Q = []
-		for i in range(len(self.eigenvector)):
-			Q.append(self.eigenvector[i])
-		#####PRECISA ACABAR
+		#self.eigenvector.sort()
+		#self.eigenvector = self.eigenvector[::-1]
+		#eta = self.eigenvalue[0]/(sum(self.eigenvalue))
+		#print(eta)
+		#print(self.eigenvector)
 
 	def plot(self):
+		origin = [0,0]
 		plt.title("PCA")
 		plt.xlabel("x")
 		plt.ylabel("y")
 		plt.xlim(-1,1)
 		plt.ylim(-1,1)
+		plt.quiver(*origin, *self.eigenvector[:,0], width = 0.004)
+		plt.quiver(*origin, *self.eigenvector[:,1], width = 0.004)
 		#plt.scatter(self.circulo_x,self.circulo_y, s = 2)
 		#plt.scatter(self.circulo_x,self.circulo_y_alongado, s = 2)
-		#plt.scatter(self.rotacao_[0],self.rotacao_[1], s = 2)
+		plt.scatter(self.rotacao_[0],self.rotacao_[1], s = 2)
 		plt.show()
 
 	def subplot(self):
