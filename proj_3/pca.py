@@ -64,11 +64,8 @@ class PCA:
 		self.eigenvalue,self.eigenvector = LA.eig(self.cov_matrix)
 		self.eigenvalue.sort()
 		self.eigenvalue = self.eigenvalue[::-1]
-		#self.eigenvector.sort()
-		#self.eigenvector = self.eigenvector[::-1]
 		#eta = self.eigenvalue[0]/(sum(self.eigenvalue))
 		#print(eta)
-		#print(self.eigenvector)
 
 	def plot(self):
 		origin = [0,0]
